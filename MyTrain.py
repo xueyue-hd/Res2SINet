@@ -10,6 +10,9 @@ parser.add_argument('--epoch', type=int, default=30)
 parser.add_argument('--save_model', type=str, default='./Result/2020-CVPR-SINet-New/Model/')
 parser.add_argument('--save_epoch', type=int, default=0)
 parser.add_argument('--save_loss_mae', type=str, default='./Result/2020-CVPR-SINet-New/Loss_Mae/')
+# 需要根据已有的模型改变路由,记住同时在训练模型部分修改已经训练的次数
+parser.add_argument('--model_path', type=str,
+                    default='./Result/2020-CVPR-SINet-New/Model/SINet_30.pth')
 # 进行解析
 opt = parser.parse_args()
 
@@ -24,11 +27,14 @@ for dataset in ['COD10K_CAMO_CombinedTrainingDataset']:
 # 实例化模型
 # model = SINet_ResNet50()
 model = SINet_ResNet50().cuda()
+model.load_state_dict(torch.load(opt.model_path))
+
 # 训练模型
 # epoch = 30, lr = 0.0001, Adam optimizer, batch = 36, total_step = len(train_loader)
 # 4.2 实例化优化器
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 for i in range(opt.epoch):
+    # 此处修改已经训练的次数
     opt.save_epoch = i+1
     trainer(train_loader=train_loader, model=model, optimizer=optimizer, epoch=i, opt=opt, loss_func=eval_mae,
             total_step=len(train_loader))
