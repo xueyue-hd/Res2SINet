@@ -6,7 +6,7 @@ from Src.SINet import SINet_ResNet50
 
 # 创建一个解析对象
 parser = argparse.ArgumentParser()
-parser.add_argument('--epoch', type=int, default=30)
+parser.add_argument('--epoch', type=int, default=80)
 # 如果在colab上跑的话，尤其是代码在drive里面时，会直接建在/
 parser.add_argument('--save_model', type=str, default='./Result/2020-CVPR-SINet-New/Model/')
 parser.add_argument('--save_epoch', type=int, default=0)
