@@ -73,7 +73,7 @@ def trainer(train_loader, model, optimizer, epoch, opt, loss_func, total_step):
 
         cam_sm, cam_im = model(images)  # 预测结果 y_predict
 
-        # 计算当前batchsize的平均损失,损失函数为mae
+        # 计算当前batchsize的平均损失,损失函数为mae,item()将tensor数据转换成标量
         loss_sm = loss_func(cam_sm, gts)
         runing_loss_s = loss_sm.item()
         loss_im = loss_func(cam_im, gts)
@@ -105,8 +105,5 @@ def trainer(train_loader, model, optimizer, epoch, opt, loss_func, total_step):
 
     if (epoch+1) % opt.save_epoch == 0:
         # 运行一轮数据，保存当前轮次中的所有的
-        Loss0 = torch.tensor(Loss_s)
-        Loss1 = torch.tensor(Loss_i)
-        torch.save(model.state_dict(), save_path + 'SINet_%d.pth' % (epoch+1))
-        np.savetxt(fname=loss_save_path + 'loss_sm_epoch{}.txt'.format(epoch + 1), X=Loss0.numpy(), fmt='%.4f')
-        np.savetxt(fname=loss_save_path + 'loss_im_epoch{}.txt'.format(epoch + 1), X=Loss1.numpy(), fmt='%.4f')
+        torch.save(model.state_dict(), save_path + 'SINet_%d.pth' % (epoch + 1))
+        return np.mean(Loss_s), np.mean(Loss_i)
